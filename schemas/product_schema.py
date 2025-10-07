@@ -1,7 +1,3 @@
-from litellm import completion
-from config import MODEL
-import json
-
 product_schema = {
     "name": "ProductInfo",
     "schema": {
