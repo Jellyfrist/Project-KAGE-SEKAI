@@ -3,11 +3,6 @@
     "schema": {
         "type": "object",
         "properties": {
-            "product_id": {
-                "type": "string",
-                "description": "Reference ID of the product analysed.",
-                "example": "C001"
-            },
             "product_name": {
                 "type": "string",
                 "description": "Name of the product mentioned in the review.",
@@ -69,7 +64,7 @@
                 "required": ["overall_sentiment"]
             }
         },
-        "required": ["product_id", "product_name", "review_text", "aspects"],
+        "required": ["product_name", "review_text"],
         "additionalProperties": false
     },
     "strict": true
