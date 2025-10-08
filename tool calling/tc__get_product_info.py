@@ -17,16 +17,16 @@ PRODUCT_DB = {
         "cons": ["แพคเกจซึมง่าย"],
         "warnings": ["ควรเก็บให้ห่างจากแสงแดด"],
         "number_of_shades": 23,
-        "price_range": {"min_price": 159, "max_price": 249}
+        "price_range": {"min_price": 299, "max_price": 349}
     },
     "C001": {
-        "product_name": "คุชชั่นกะทิพรีเมียม",
+        "product_name": "คุชชั่นเสกผิว",
         "category": "คุชชั่น",
         "features": ["เนื้อบางเบา", "ปกปิดดี", "กันน้ำ"],
         "pros": ["ผิวโกลว์", "ติดทนทาน"],
         "cons": ["มีเฉดสีให้เลือกน้อย"],
         "warnings": ["ทดสอบก่อนใช้กับผิวแพ้ง่าย"],
-        "number_of_shades": 4,
-        "price_range": {"min_price": 299, "max_price": 399}
+        "number_of_shades": 7,
+        "price_range": {"min_price": 495, "max_price": 790}
     }
 }
