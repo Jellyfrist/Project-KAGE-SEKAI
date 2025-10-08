@@ -3,7 +3,7 @@ from typing import List
 from schemas.review_schema import review_schema
 
 class ReviewTools:
-    def analyze_review(self, product_id: str, product_name: str, review_text: str, aspects: List[str] = None):
+    def analyze_review(self, product_name: str, review_text: str, aspects: List[str] = None):
         """
         Analyze review and return a JSON structure matching `review_schema`.
         """
@@ -57,7 +57,6 @@ class ReviewTools:
         )
 
         result = {
-            "product_id": product_id,
             "product_name": product_name,
             "review_text": review_text,
             "aspects": aspects_result,
@@ -80,7 +79,6 @@ class ReviewTools:
             "parameters": {
                 "type": "object",
                 "properties": {
-                    "product_id": review_schema["schema"]["properties"]["product_id"],
                     "product_name": review_schema["schema"]["properties"]["product_name"],
                     "review_text": review_schema["schema"]["properties"]["review_text"],
                     "aspects": {
@@ -89,6 +87,6 @@ class ReviewTools:
                         "items": {"type": "string"}
                     }
                 },
-                "required": ["product_id", "product_name", "review_text"],
+                "required": ["product_name", "review_text"],
             }
         }]
