@@ -1,57 +1,89 @@
 import json
-import logging
-from litellm import completion
-from config import MODEL
+import os
+from typing import Dict, List, Any
 from schemas.product_schema import product_schema
 
-# mock database
-PRODUCT_DB = {
-    "L001": {
-        "product_name": "ลิปไก่ทอด",
-        "category": "ลิปกลอส",
-        "features": ["เม็ดสีแน่น", "กลิ่นหอม", "ไม่ทำให้ปากแห้ง"],
-        "pros": ["สีชัด", "ติดทน"],
-        "cons": ["แพคเกจซึมง่าย"],
-        "warnings": ["ควรเก็บให้ห่างจากแสงแดด"],
-        "number_of_shades": 23,
-        "price_range": {"min_price": 299, "max_price": 349}
-    },
-    "C001": {
-        "product_name": "คุชชั่นเสกผิว",
-        "category": "คุชชั่น",
-        "features": ["เนื้อบางเบา", "ปกปิดดี", "กันน้ำ"],
-        "pros": ["ผิวโกลว์", "ติดทน"],
-        "cons": ["มีเฉดสีให้เลือกน้อย"],
-        "warnings": ["ทดสอบก่อนใช้กับผิวแพ้ง่าย"],
-        "number_of_shades": 7,
-        "price_range": {"min_price": 495, "max_price": 790}
-    }
-}
+# Simulated product database
+try:
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+except NameError:
+    BASE_DIR = os.getcwd() 
+JSON_FILE_PATH = os.path.join(BASE_DIR, 'products.json')
+
+def load_product_db_from_json(file_path: str) -> Dict[str, Any]:
+    """Loads product data from a JSON file and structures it with 'id' as the key."""
+    try:
+        if not os.path.exists(file_path):
+            print(f"ERROR: The file '{file_path}' was not found.")
+            raise FileNotFoundError(f"File not found at: {file_path}")
+        
+        with open(file_path, 'r', encoding='utf-8') as f:
+            # download data that is List of Dictionary
+            product_list: List[Dict[str, Any]] = json.load(f)
+    
+        # Create a dictionary with product_id as key for easy lookup
+        product_db = {
+            product['id']: product 
+            for product in product_list if product.get('id') 
+        }
+        return product_db
+
+    except FileNotFoundError:
+        print(f"ERROR: The file '{file_path}' was not found. Check your file path.")
+        return {}
+    except json.JSONDecodeError:
+        print(f"ERROR: Could not decode JSON from '{file_path}'. Check file format.")
+        return {}
+
+PRODUCT_DB = load_product_db_from_json(JSON_FILE_PATH)
 
 class ProductTools:
     """Tool class for product-related operations."""
 
     def get_product_info(self, product_id: str) -> dict:
         # Simulate fetching data from a database
-        product = PRODUCT_DB.get(product_id)
+        product_raw = PRODUCT_DB.get(product_id)
 
         # Handle case where product ID is not found
-        if not product:
+        if not product_id or not product_raw:
             return {"error": f"Product ID '{product_id}' not found."}
+
+        # 1. Price Range
+        # change string "299–349 บาท" to min_price and max_price
+        price_str = product_raw.get("price", "0–0 บาท").replace(" บาท", "")
+        if "–" in price_str:
+            min_price_str, max_price_str = price_str.split("–")
+            min_price = int(min_price_str.strip())
+            max_price = int(max_price_str.strip())
+        else:
+            min_price = max_price = int(price_str.strip())
+
+        # 2. Counting Shades (main_colors + new_colors)
+        shades = product_raw.get("shades", {})
+        num_main = len(shades.get("main_colors", []))
+        num_new = len(shades.get("new_colors", []))
+        number_of_shades = num_main + num_new
+        # if have other keys example 'blend' -> do not count
+
+        # features, pros, cons, warnings
+        features = product_raw.get("key_features", [])
+        pros = product_raw.get("advantages", [])
+        cons = product_raw.get("disadvantages", [])
+        warnings = product_raw.get("cautions", [])
 
         # Construct the response based on the schema
         product_info = {
-            "product_id": product_id,
-            "product_name": product["product_name"],
-            "category": product["category"],
-            "features": product["features"],
-            "pros": product["pros"],
-            "cons": product["cons"],
-            "warnings": product["warnings"],
-            "number_of_shades": product["number_of_shades"],
+            "product_id": product_raw["id"],
+            "product_name": product_raw["name_th"],
+            "category": product_raw["type"],
+            "features": features, 
+            "pros": pros,
+            "cons": cons,
+            "warnings": warnings,
+            "number_of_shades": number_of_shades,
             "price_range": {
-                "min_price": product["price_range"]["min_price"],
-                "max_price": product["price_range"]["max_price"],
+                "min_price": min_price,
+                "max_price": max_price,
                 "currency": "THB"
             }
         }
