@@ -28,7 +28,6 @@ review_input_schema = {
 # --------------------------
 # TOOL IMPLEMENTATION
 # --------------------------
-
 def analyze_review(product_id: str, product_name: str, review_text: str, aspects: list[str] = None):
     """
     Analyze review and return a JSON structure matching `review_schema`.
@@ -94,7 +93,6 @@ def analyze_review(product_id: str, product_name: str, review_text: str, aspects
 # --------------------------
 # TOOL DEFINITION (Schema)
 # --------------------------
-
 review_tool = [{
     "name": "analyze_review",
     "description": "Analyze customer review into multiple aspects and output sentiment following MultiAspectReview schema.",
@@ -106,7 +104,6 @@ TOOL_IMPL = {"analyze_review": analyze_review}
 # --------------------------
 # MAIN EXECUTION LOOP
 # --------------------------
-
 if __name__ == "__main__":
     messages = [
         {"role": "user", "content": """
