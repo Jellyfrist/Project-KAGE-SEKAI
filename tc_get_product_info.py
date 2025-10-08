@@ -8,7 +8,8 @@ try:
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 except NameError:
     BASE_DIR = os.getcwd() 
-JSON_FILE_PATH = os.path.join(BASE_DIR, 'products.json')
+
+JSON_FILE_PATH = os.path.join(BASE_DIR, 'data', 'products.json')
 
 def load_product_db_from_json(file_path: str) -> Dict[str, Any]:
     """Loads product data from a JSON file and structures it with 'id' as the key."""
