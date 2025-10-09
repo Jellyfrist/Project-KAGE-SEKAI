@@ -1,9 +1,11 @@
+import re
 import json
-from typing import List
+from collections import Counter
+from typing import List, Dict, Any
 from schemas.review_schema import review_schema
 
 class ReviewTools:
-    def analyze_review(self, product_name: str, review_text: str, aspects: List[str] = None):
+    def analyze_review(self, product_name: str, review_texts: List[str], aspects: list[str] = None):
         """
         Analyze review and return a JSON structure matching `review_schema`.
         """
@@ -16,54 +18,70 @@ class ReviewTools:
         positive_words = ["ดี", "ชอบ", "ไว", "แน่น", "หอม", "สวย", "ปัง", "จึ้ง", "ประทับใจ"]
         negative_words = ["แพง", "ช้า", "ไม่", "พัง", "แห้ง", "เลอะ", "หนัก", "โป๊ะ", "ตำหนิ", "ติ"]
 
-        aspects_result = []
-        positive_score = 0
-        negative_score = 0
+        all_aspects_results = []
+        strengths_set = set()
+        weaknesses_set = set()
+        positive_count = 0
+        negative_count = 0
 
-        for asp in aspects:
-            asp_sentiment = "neutral"
-            reason = ""
-            for word in positive_words:
-                if word in review_text:
-                    asp_sentiment = "positive"
-                    reason = f"พบคำเชิงบวก '{word}'"
-                    positive_score += 1
-                    break
-        
-            # only check for negative if not already positive
-            if asp_sentiment != "positive":
-                for word in negative_words:
-                    if word in review_text:
-                        asp_sentiment = "negative"
-                        reason = f"พบคำเชิงลบ '{word}'"
-                        negative_score += 1
+        for rv in review_texts:
+            review_aspects = []
+
+            for asp in aspects:
+                asp_sentiment = "neutral"
+                reasons = []
+
+                # Simple keyword-based sentiment detection
+            
+                # check for positive words
+                for word in positive_words:
+                    if word in rv:
+                        asp_sentiment = "positive"
+                        reason = f"พบคำเชิงบวก '{word}' เกี่ยวกับ {asp}"
+                        positive_count += 1
+                        strengths_set.add(f"{asp}: {word}")
                         break
-    
-            aspects_result.append({
-                "aspect_name": asp,
-                "sentiment": asp_sentiment,
-                "reason": reason
-            })
+        
+                # only check for negative if not already positive
+                if asp_sentiment != "positive":
+                    for word in negative_words:
+                        if word in rv:
+                            asp_sentiment = "negative"
+                            reason = f"พบคำเชิงลบ '{word}' เกี่ยวกับ {asp}"
+                            negative_count += 1
+                            weaknesses_set.add(f"{asp}: {word}")
+                            break
 
-        # strengths and weaknesses
-        strengths = [f"มีคำเชิงบวก '{word}'" for word in positive_words if word in review_text]
-        weaknesses = [f"มีคำเชิงลบ '{word}'" for word in negative_words if word in review_text]
+                # collect review aspect results
+                review_aspects.append({
+                    "aspect_name": asp,
+                    "sentiment": asp_sentiment,
+                    "reason": reason if reason else "ไม่มีคำเชิงบวกหรือลบที่ชัดเจน"
+                })
+
+            all_aspects_results.extend(review_aspects)
 
         # determine overall sentiment
-        overall_sentiment = (
-            "positive" if positive_score > negative_score
-            else "negative" if negative_score > positive_score
-            else "neutral"
-        )
+        if positive_count > negative_count:
+            overall_sentiment = "positive"
+        elif negative_count > positive_count:
+            overall_sentiment = "negative"
+        else:
+            overall_sentiment = "neutral"
 
+        # reasoning based on counts
+        reasoning = f"วิเคราะห์จาก {len(review_texts)} รีวิว: มีคำเชิงบวก {positive_count} ครั้ง, คำเชิงลบ {negative_count} ครั้ง"
+
+        # create final result following schema
         result = {
             "product_name": product_name,
-            "review_text": review_text,
-            "aspects": aspects_result,
+            "review_texts": review_texts,   # list of reviews
+            "aspects":  all_aspects_results,
             "summary": {
                 "overall_sentiment": overall_sentiment,
-                "strengths": strengths,
-                "weaknesses": weaknesses
+                "strengths": list(strengths_set),
+                "weaknesses": list(weaknesses_set),
+                "reasoning": reasoning
             }
         }
         return result
@@ -75,18 +93,22 @@ class ReviewTools:
         """
         return [{
             "name": "analyze_review",
-            "description": "Analyze customer review into multiple aspects and output sentiment.",
+            "description": "Analyze multiple customer reviews into multiple aspects and output sentiment with reasoning.",
             "parameters": {
                 "type": "object",
                 "properties": {
                     "product_name": review_schema["schema"]["properties"]["product_name"],
-                    "review_text": review_schema["schema"]["properties"]["review_text"],
+                    "review_texts": {
+                        "type": "array",
+                        "description": "List of raw review texts for this product.",
+                        "items": {"type": "string"}
+                    },
                     "aspects": {
                         "type": "array",
                         "description": "Optional list of aspects to analyze.",
                         "items": {"type": "string"}
                     }
                 },
-                "required": ["product_name", "review_text"],
+                "required": ["product_name", "review_texts"],
             }
         }]
