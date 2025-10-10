@@ -1,0 +1,126 @@
+[{
+        "product_id": "B001",
+        "name_th": "ฟิลเตอร์บลัช",
+        "name_en": "Filter Brush",
+        "type": "บลัชออนเนื้อครีม",
+        "volume": "10ml / 0.5g",
+        "price": "199–249 บาท",
+        "shelf_life": "24 เดือน",
+        "storage": "อุณหภูมิปกติ",
+        "form": "ตลับ",
+        "use_for": "แก้ม / ตา / ปาก",
+        "usage": "ทาบริเวณแก้ม / ตา / ปาก",
+        "texture": "ครีม",
+        "finish": "เปล่งปลั่ง",
+        "key_features": [
+            "เนื้อครีมเนียนนุ่ม ลื่น เกลี่ยง่าย",
+            "สีชัด ติดทนนาน",
+            "ใช้ได้ทั้งแก้ม ตา ปาก",
+            "เหมาะกับทุกระดับการแต่งหน้า",
+            "สีสันหลากหลายและเข้ากับทุกเฉดผิว",
+            "สามารถทาเดี่ยวหรือผสมสีได้"
+        ],
+        "advantages": [
+            "เกลี่ยง่าย",
+            "สีชัด ติดทนนาน",
+            "ใช้ได้กับทุกเฉดผิว",
+            "ฟื้นฟูแก้มให้สดใส มีชีวิตชีวา"
+        ],
+        "disadvantages": [
+            "ต้องกะน้ำหนักมือในการทาเพราะเม็ดสีแน่น"
+        ],
+        "cautions": [
+            "ควรเลือกสีให้เข้ากับสภาพผิว",
+            "ต้องลบเครื่องสำอางออกให้หมดทุกครั้ง"
+        ],
+        "color_range": "11 สี",
+        "shades": [
+            {
+                "color_name": "Carrot",
+                "description": "สีส้มแครอท สดใส (Sold out)",
+                "personal_color": "Spring Warm",
+                "skin_tone": ["ขาวเหลือง", "น้ำผึ้ง", "สองสี"],
+                "suitable_skin_type": "ทุกสภาพผิว",
+                "suitable_look": "Healthy Glow / Fresh Summer Look"
+            },
+            {
+                "color_name": "Tomato",
+                "description": "สีแดงระเรื่อ แก้มเลือดฝาด",
+                "personal_color": "Winter Cool / Spring Bright",
+                "skin_tone": ["ขาวชมพู", "ขาวเหลือง"],
+                "suitable_skin_type": "ทุกสภาพผิว",
+                "suitable_look": "Flushed Natural Look"
+            },
+            {
+                "color_name": "Grape",
+                "description": "สีม่วง ชมพูระเรื่อ",
+                "personal_color": "Winter Cool / Summer Cool",
+                "skin_tone": ["ขาวชมพู", "สองสี"],
+                "suitable_skin_type": "ทุกสภาพผิว",
+                "suitable_look": "Korean Soft Glam"
+            },
+            {
+                "color_name": "Pomelo",
+                "description": "สีส้มโอ สีส้มระเรื่อ",
+                "personal_color": "Spring Warm / Autumn Soft",
+                "skin_tone": ["ขาวเหลือง", "น้ำผึ้ง"],
+                "suitable_skin_type": "ทุกสภาพผิว",
+                "suitable_look": "Fresh Coral Glow"
+            },
+            {
+                "color_name": "Lychee",
+                "description": "สีชมพูอมส้ม",
+                "personal_color": "Spring Warm / Neutral",
+                "skin_tone": ["ขาวเหลือง", "ขาวชมพู"],
+                "suitable_skin_type": "ทุกสภาพผิว",
+                "suitable_look": "Sweet Everyday Look"
+            },
+            {
+                "color_name": "Rose Apple",
+                "description": "สีชมพูสุดคิวท์ (มีกลิตเตอร์)",
+                "personal_color": "Spring Light / Summer Cool",
+                "skin_tone": ["ขาวชมพู", "ขาวเหลือง"],
+                "suitable_skin_type": "ทุกสภาพผิว",
+                "suitable_look": "Cute Sparkle Look"
+            },
+            {
+                "color_name": "Mono",
+                "description": "สีชมพูนมเย็น",
+                "personal_color": "Winter Cool / Neutral Cool",
+                "skin_tone": ["ขาวชมพู", "ขาวซีด"],
+                "suitable_skin_type": "ทุกสภาพผิว",
+                "suitable_look": "Soft K-Beauty Look"
+            },
+            {
+                "color_name": "Bare Fig",
+                "description": "ชมพูอมส้มพีช",
+                "personal_color": "Spring Warm / Autumn Light",
+                "skin_tone": ["ขาวเหลือง", "น้ำผึ้ง"],
+                "suitable_skin_type": "ทุกสภาพผิว",
+                "suitable_look": "Everyday Natural Glow"
+            },
+            {
+                "color_name": "Mocha",
+                "description": "สีน้ำตาล",
+                "personal_color": "Autumn Warm / Deep Neutral",
+                "skin_tone": ["สองสี", "แทน"],
+                "suitable_skin_type": "ทุกสภาพผิว",
+                "suitable_look": "Sculpted Nude Look"
+            },
+            {
+                "color_name": "Date",
+                "description": "สีน้ำตาลอมแดง ขับผิว",
+                "personal_color": "Autumn Deep / Winter Deep",
+                "skin_tone": ["แทน", "น้ำผึ้ง", "ดำ"],
+                "suitable_skin_type": "ทุกสภาพผิว",
+                "suitable_look": "Warm Bold Look"
+            },
+            {
+                "color_name": "Blush Blend (Grey Color)",
+                "personal_color": "All Tone / Neutralizer",
+                "skin_tone": ["ทุกโทนผิว"],
+                "suitable_skin_type": "ทุกสภาพผิว",
+                "suitable_look": "Use for tone adjusting or soft blending"
+            }
+        ]
+    }]
