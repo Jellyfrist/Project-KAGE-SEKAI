@@ -1,0 +1,223 @@
+[
+    {
+        "product_id": "L001",
+        "name_th": "ลิปไก่ทอดแบบแท่ง",
+        "name_en": "Syrup Glossy Lip",
+        "type": "ลิปกลอสแบบแท่ง",
+        "volume": "9g",
+        "price": "299–349 บาท",
+        "shelf_life": "36 เดือน",
+        "storage": "อุณหภูมิปกติ",
+        "form": "แท่ง",
+        "use_for": "ริมฝีปาก",
+        "usage": "ทาบริเวณริมฝีปาก",
+        "texture": "เนื้อกลอส",
+        "finish": "เงางาม",
+        "key_features": [
+            "กลอสไซรัปพัฒนามาจากลิปไก่ทอด",
+            "พกพาง่าย เนื้อกลอสกลบสีปากพร้อมบำรุง",
+            "ให้ความชุ่มชื้นและความเงางาม",
+            "เนื้อลิปไม่เหนียว ปากอวบอิ่ม สุขภาพดี"
+        ],
+        "advantages": [
+            "บำรุงริมฝีปาก",
+            "เนื้อลิปเบาสบาย ทาแล้วปากดูอวบอิ่ม",
+            "กลิ่นหอมผลไม้ เหมาะกับทุกโอกาส"
+        ],
+        "disadvantages": [
+            "ไม่ติดทน",
+            "แพ็คเกจเลอะง่าย"
+        ],
+        "cautions": [
+            "ระวังเรื่องความติดทน",
+            "ระวังการระคายเคือง"
+        ],
+        "color_range": "23 สี",
+        "shades": [
+            {
+                "color_name": "01 Peach",
+                "description": "สีพีชอมส้ม",
+                "personal_color": "Spring Warm",
+                "skin_tone": ["ขาวเหลือง", "น้ำผึ้ง"],
+                "suitable_skin_type": "ทุกสภาพผิว",
+                "suitable_look": "Natural Everyday"
+            },
+            {
+                "color_name": "02 Pear",
+                "description": "สีนู้ดชมพูอมเบจ",
+                "personal_color": "Summer Cool",
+                "skin_tone": ["ขาวชมพู", "ขาวเหลือง"],
+                "suitable_skin_type": "ทุกสภาพผิว",
+                "suitable_look": "Soft Feminine"
+            },
+            {
+                "color_name": "03 Grape Fruit",
+                "description": "สีชมพูอมส้ม",
+                "personal_color": "Autumn Warm",
+                "skin_tone": ["น้ำผึ้ง", "สองสี"],
+                "suitable_skin_type": "ทุกสภาพผิว",
+                "suitable_look": "Fresh Casual"
+            },
+            {
+                "color_name": "04 Blueberry",
+                "description": "สีม่วงอมชมพู",
+                "personal_color": "Winter Cool",
+                "skin_tone": ["ขาวชมพู", "สองสี"],
+                "suitable_skin_type": "ทุกสภาพผิว",
+                "suitable_look": "Trendy Glam"
+            },
+            {
+                "color_name": "05 Maple",
+                "description": "สีน้ำตาลอมแดง",
+                "personal_color": "Autumn Warm",
+                "skin_tone": ["น้ำผึ้ง", "สองสี", "แทน"],
+                "suitable_skin_type": "ทุกสภาพผิว",
+                "suitable_look": "Warm Elegant"
+            },
+            {
+                "color_name": "06 Apple",
+                "description": "สีแดงสด",
+                "personal_color": "Neutral Warm",
+                "skin_tone": ["ขาวเหลือง", "สองสี"],
+                "suitable_skin_type": "ทุกสภาพผิว",
+                "suitable_look": "Soft Natural"
+            },
+            {
+                "color_name": "07 Strawberry",
+                "description": "สีชมพูสด",
+                "personal_color": "Spring Warm",
+                "skin_tone": ["ขาวเหลือง", "ขาวชมพู"],
+                "suitable_skin_type": "ทุกสภาพผิว",
+                "suitable_look": "Cute Everyday"
+            },
+            {
+                "color_name": "08 Cherry",
+                "description": "สีแดงเชอร์รี่เข้ม",
+                "personal_color": "Winter Cool",
+                "skin_tone": ["ขาวชมพู", "เข้ม"],
+                "suitable_skin_type": "ทุกสภาพผิว",
+                "suitable_look": "Glamorous Night"
+            },
+            {
+                "color_name": "09 Lychee",
+                "description": "สีนู้ดชมพูอ่อน",
+                "personal_color": "Spring Warm",
+                "skin_tone": ["ขาวเหลือง"],
+                "suitable_skin_type": "ทุกสภาพผิว",
+                "suitable_look": "Everyday Nude Glow"
+            },
+            {
+                "color_name": "10 Cranberry",
+                "description": "สีชมพูอมแดง",
+                "personal_color": "Summer Cool",
+                "skin_tone": ["ขาวชมพู", "น้ำผึ้ง"],
+                "suitable_skin_type": "ทุกสภาพผิว",
+                "suitable_look": "Fresh Pinky Pop"
+            },
+            {
+                "color_name": "11 Peanut",
+                "description": "สีน้ำตาลอ่อน",
+                "personal_color": "Autumn Warm",
+                "skin_tone": ["น้ำผึ้ง", "สองสี"],
+                "suitable_skin_type": "ทุกสภาพผิว",
+                "suitable_look": "Soft Nude Warm"
+            },
+            {
+                "color_name": "12 Date",
+                "description": "สีน้ำตาลแดงเข้ม",
+                "personal_color": "Autumn Warm",
+                "skin_tone": ["สองสี", "แทน"],
+                "suitable_skin_type": "ทุกสภาพผิว",
+                "suitable_look": "Elegant Brownish"
+            },
+            {
+                "color_name": "13 Almond",
+                "description": "สีน้ำตาลนู้ดธรรมชาติ",
+                "personal_color": "Autumn Warm",
+                "skin_tone": ["น้ำผึ้ง", "สองสี"],
+                "suitable_skin_type": "ทุกสภาพผิว",
+                "suitable_look": "Classy Everyday"
+            },
+            {
+                "color_name": "14 Sweet Vanilla",
+                "description": "สีนู้ดเบจอ่อน",
+                "personal_color": "Neutral",
+                "skin_tone": ["ทุกโทนผิว"],
+                "suitable_skin_type": "ทุกสภาพผิว",
+                "suitable_look": "Soft Everyday"
+            },
+            {
+                "color_name": "15 Smoothie Guava",
+                "description": "สีชมพูอมส้มพาสเทล",
+                "personal_color": "Spring Warm",
+                "skin_tone": ["ขาวเหลือง", "ขาวชมพู"],
+                "suitable_skin_type": "ทุกสภาพผิว",
+                "suitable_look": "Youthful Natural"
+            },
+            {
+                "color_name": "16 Pink Taro",
+                "description": "สีชมพูอมม่วงอ่อน",
+                "personal_color": "Neutral Cool",
+                "skin_tone": ["ขาวชมพู", "โทนกลาง"],
+                "suitable_skin_type": "ทุกสภาพผิว",
+                "suitable_look": "Korean Soft Look"
+            },
+            {
+                "color_name": "17 Caffe Latte",
+                "description": "สีน้ำตาลลาเต้",
+                "personal_color": "Neutral Warm",
+                "skin_tone": ["สองสี", "น้ำผึ้ง"],
+                "suitable_skin_type": "ทุกสภาพผิว",
+                "suitable_look": "Soft Brown Nude"
+            },
+            {
+                "color_name": "18 Sparkling Wine",
+                "description": "สีแดงไวน์ประกายชมพู",
+                "personal_color": "Winter Cool",
+                "skin_tone": ["เข้ม", "แทน"],
+                "suitable_skin_type": "ทุกสภาพผิว",
+                "suitable_look": "Night Glam Look"
+            },
+            {
+                "color_name": "19 Brown Sugar",
+                "description": "สีน้ำตาลเข้มอมทอง",
+                "personal_color": "Autumn Warm",
+                "skin_tone": ["แทน", "น้ำผึ้ง"],
+                "suitable_skin_type": "ทุกสภาพผิว",
+                "suitable_look": "Warm Deep Look"
+            },
+            {
+                "color_name": "20 Espresso",
+                "description": "สีน้ำตาลเข้มลึก",
+                "personal_color": "Autumn Deep",
+                "skin_tone": ["แทน", "ดำ"],
+                "suitable_skin_type": "ทุกสภาพผิว",
+                "suitable_look": "Deep Chic"
+            },
+            {
+                "color_name": "21 Strawberry Acai",
+                "description": "สีแดงอมชมพูสด",
+                "personal_color": "Winter Cool",
+                "skin_tone": ["เข้ม", "ขาวชมพู"],
+                "suitable_skin_type": "ทุกสภาพผิว",
+                "suitable_look": "Berry Bold Look"
+            },
+            {
+                "color_name": "22 Very Berry",
+                "description": "สีชมพูอมม่วงเย็น",
+                "personal_color": "Summer Cool",
+                "skin_tone": ["ขาวชมพู", "ขาวซีด"],
+                "suitable_skin_type": "ทุกสภาพผิว",
+                "suitable_look": "Sweet Cool Look"
+            },
+            {
+                "color_name": "Lip Blend (Grey)",
+                "description": "สีเทากลาง",
+                "personal_color": "All Tone / Neutralizer",
+                "skin_tone": ["ทุกโทนผิว"],
+                "suitable_skin_type": "ทุกสภาพผิว",
+                "suitable_look": "Use for blending or toning down"
+            }
+        ]
+    }
+]

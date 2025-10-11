@@ -1,0 +1,115 @@
+[
+    {
+        "product_id": "C001",
+        "name_th": "คอลซีลเลอร์ยางลบ & คอเรคเตอร์ยางลบ",
+        "name_en": "FLUFFY CLOUD CONCEALER & CORRECTOR",
+        "type": "คอนซีลเลอร์ & คอเรคเตอร์",
+        "volume": "4.5g",
+        "price": "199–389 บาท",
+        "shelf_life": "24 เดือน",
+        "storage": "อุณหภูมิปกติ",
+        "form": "แท่ง",
+        "coverage": "Light to Medium",
+        "use_for": "ใบหน้า",
+        "usage": [
+            "Concealer: แต้มจุดที่ต้องการ ทิ้งไว้ 1 นาที แล้วเกลี่ย",
+            "Corrector: แต้มเฉพาะจุดตามปัญหาผิว"
+        ],
+        "texture": "ครีม",
+        "finish": "ธรรมชาติ",
+        "key_features": [
+            "เนื้อบางเบา เกลี่ยง่าย ไม่ตกร่อง",
+            "ปกปิดปานกลาง เหมาะสำหรับทุกวัน",
+            "กันน้ำ กันเหงื่อ ไม่เป็นคราบ",
+            "มีหัวฟองน้ำช่วยเกลี่ยเรียบเนียน",
+            "Corrector สี Peach ช่วยกลบรอยคล้ำ"
+        ],
+        "advantages": [
+            "เหมาะสำหรับลุคงานผิวธรรมชาติ",
+            "ใช้งานง่าย พกพาสะดวก"
+        ],
+        "disadvantages": [
+            "ไม่เหมาะสำหรับการปกปิดแบบ Full Coverage",
+            "เนื้อค่อนข้างแห้งไว"
+        ],
+        "cautions": [
+            "ต้องเกลี่ยให้ทันเวลา",
+            "ใช้ไม่เกินบริเวณที่ต้องการ"
+        ],
+        "color_range": "ทั้งหมดมี 9 สี, 4 สีคอนซีลเลอร์ และ 5 สีคอเรคเตอร์",
+        "shades": [
+            {
+                "color_name": "00 Fair Light",
+                "description": "ผิวขาวอมชมพู",
+                "personal_color": "Cool Summer",
+                "skin_tone": ["ขาวชมพู"],
+                "suitable_skin_type": "ทุกสภาพผิว",
+                "suitable_look": "Natural Bright"
+            },
+            {
+                "color_name": "01 Light",
+                "description": "ผิวขาว / ขาวเหลือง",
+                "personal_color": "Spring Warm",
+                "skin_tone": ["ขาวเหลือง", "ขาวชมพู"],
+                "suitable_skin_type": "ทุกสภาพผิว",
+                "suitable_look": "Soft Everyday"
+            },
+            {
+                "color_name": "02 Medium Light",
+                "description": "ผิวสองสี",
+                "personal_color": "Neutral Warm",
+                "skin_tone": ["น้ำผึ้ง", "สองสี"],
+                "suitable_skin_type": "ทุกสภาพผิว",
+                "suitable_look": "Natural Glow"
+            },
+            {
+                "color_name": "03 Medium",
+                "description": "ผิวน้ำผึ้ง",
+                "personal_color": "Autumn Warm",
+                "skin_tone": ["แทน", "น้ำผึ้ง"],
+                "suitable_skin_type": "ทุกสภาพผิว",
+                "suitable_look": "Healthy Skin"
+            },
+            {
+                "color_name": "White",
+                "description": "ใช้ผสมสี / ไฮไลท์",
+                "personal_color": "All Tone",
+                "skin_tone": ["ทุกโทนผิว"],
+                "suitable_skin_type": "ทุกสภาพผิว",
+                "suitable_look": "Brighten Look"
+            },
+            {
+                "color_name": "Lavender",
+                "description": "ลดความเหลือง",
+                "personal_color": "Cool Tone",
+                "skin_tone": ["ขาวชมพู", "ขาวซีด"],
+                "suitable_skin_type": "ทุกสภาพผิว",
+                "suitable_look": "Soft Cool Look"
+            },
+            {
+                "color_name": "Green",
+                "description": "กลบรอยแดงจากสิว",
+                "personal_color": "Neutral",
+                "skin_tone": ["แดง / ระคายเคืองง่าย"],
+                "suitable_skin_type": "ทุกสภาพผิว",
+                "suitable_look": "Calm Redness"
+            },
+            {
+                "color_name": "Peach",
+                "description": "กลบรอยคล้ำใต้ตา / จุดด่างดำ",
+                "personal_color": "Spring Warm",
+                "skin_tone": ["ขาวเหลือง", "น้ำผึ้ง"],
+                "suitable_skin_type": "ทุกสภาพผิว",
+                "suitable_look": "Awake Look"
+            },
+            {
+                "color_name": "Deep Peach",
+                "description": "กลบรอยคล้ำใต้ตาหนัก",
+                "personal_color": "Autumn Deep",
+                "skin_tone": ["แทน", "น้ำผึ้ง"],
+                "suitable_skin_type": "ทุกสภาพผิว",
+                "suitable_look": "Intense Coverage"
+            }
+        ]
+    }
+]
