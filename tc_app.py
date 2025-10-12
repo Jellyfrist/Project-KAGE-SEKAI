@@ -3,8 +3,6 @@ import pandas as pd
 import json
 from io import StringIO
 
-# --- [สำคัญ] นำเข้าคลาสและ Executor จากโปรเจกต์ของคุณ ---
-# สมมติว่าไฟล์ทั้งหมดอยู่ใน Directory เดียวกัน
 try:
     from tc_complete import ToolExecutor
     from tc_analyze_review import ReviewTools
@@ -262,4 +260,5 @@ with tab2:
                             st.markdown(cleaned_result)
 
                 except Exception as e:
+
                     st.error(f"เกิดข้อผิดพลาด: {e}")
