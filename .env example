@@ -1,2 +1,4 @@
 GROQ_API_KEY=YOUR_KEY_ID
+OPENAI_API_KEY=YOUR_KEY_ID
+
 MODEL=groq/openai/gpt-oss-120b  # pick any supported chat model
