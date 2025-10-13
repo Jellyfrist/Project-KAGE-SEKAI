@@ -1,4 +1,4 @@
-# Project Guide: Chicken Banana – Beauty Product Assistant
+# Project Guide: Beauty Product Assistant with LLM
 
 ## Repository Structure
 
@@ -13,11 +13,11 @@
   - `4_Syrup Glossy Lip.py`: Lip product page.
   - `5_Truebrow Mybrow Mascara.py`: Mascara product page.
   - `Business Analyze.py`: Business analysis dashboard.
-- `RAG/`: RAG (Retrieval-Augmented Generation) components:
+- RAG (Retrieval-Augmented Generation) components:
   - `ingest.py`: Document ingestion for knowledge base.
   - `index.py`: Knowledge index creation and management.
   - `query.py`: Knowledge base querying functionality.
-  - `corpus.jsonl`: Knowledge corpus data.
+  - `corpus.jsonl`: Knowledge corpus data.   
 - `data/`: Product, FAQ, and complaint data:
   - Product data: `product_*.json` files by category.
   - FAQ data: `faq_*.json` files by category.
@@ -78,7 +78,6 @@
   - `tc_complete.py`: Handles completion tasks.
   - `tc_get_product_info.py`: Retrieves product information.
 - **RAG Components:**
-  - Tools in the `RAG/` directory handle knowledge retrieval and generation.
   - When adding new knowledge sources:
     - Add documents to `corpus.jsonl` or update `ingest.py`.
     - Re-run `index.py` to update the knowledge index.
