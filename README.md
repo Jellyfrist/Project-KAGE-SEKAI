@@ -48,7 +48,6 @@ When successfully running, you can access other pages from the sidebar, such as 
 /assets/                 # Images for the UI
 /data/                   # Product, FAQ, and complaint data in JSON files
 /pages/                  # Streamlit multi-page app
-/RAG/                    # RAG scripts: ingest, index, query, corpus
 /schemas/                # Data schemas for products and reviews (JSON & Python)
 Home.py                  # Streamlit home page
 config.py                # General project configuration
@@ -60,20 +59,20 @@ requirements.txt         # List of dependencies
 - Data structure is defined by schemas in schemas/, e.g., product_schema.json, review_schema.json
 
 ## RAG Components
-- RAG/ingest.py: For ingesting text from corpus.jsonl or other text files
-- RAG/index.py: For creating/updating the knowledge index
--	RAG/query.py: For querying the knowledge base and generating answers (knowledge-based Q&A)
+- ingest.py: For ingesting text from corpus.jsonl or other text files
+- index.py: For creating/updating the knowledge index
+-	query.py: For querying the knowledge base and generating answers (knowledge-based Q&A)
 
 Example usage of RAG (run as needed before launching the app):
 ```sh
 # Ingest documents into the corpus
-python RAG/ingest.py
+python ingest.py
 
 # Create or update the knowledge index
-python RAG/index.py
+python index.py
 
 # (Optional) Test querying the knowledge base
-python RAG/query.py
+python query.py
 ```
 
 ## Contributors
