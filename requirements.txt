@@ -3,9 +3,9 @@ streamlit
 python-dotenv
 
 # 2. Core LLM/RAG Frameworks
-langchain
+langchain>=0.2.10
 
-langchain-openai
+langchain-openai>=0.2.0
 litellm
 
 # 3. Vector Store
