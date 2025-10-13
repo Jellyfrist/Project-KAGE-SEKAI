@@ -2,9 +2,9 @@ import streamlit as st
 from PIL import Image
 import os
 from dotenv import load_dotenv
-from langchain_openai import OpenAIEmbeddings 
-from langchain_community.vectorstores import Chroma
-from langchain_openai import ChatOpenAI
+from langchain.embeddings import OpenAIEmbeddings
+from langchain.vectorstores import Chroma
+from langchain.chat_models import ChatOpenAI
 from langchain.prompts import PromptTemplate
 from datetime import datetime # <<< นำเข้า datetime
 
