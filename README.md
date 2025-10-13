@@ -1,80 +1,86 @@
-# Project KAGE SEKAI: COLORFUL STAGE! (Chicken Chicken Banana)
+# Chicken Chicken Banana – Beauty Product Assistant with LLM
 
-204203 COMPUTER SCIENCE TECHNOLOGY
+A multi-page Streamlit application for answering cosmetic product inquiries, analyzing reviews with Tool Calling, and retrieving answers using RAG.
 
-โครงการนี้เป็นศูนย์รวมเครื่องมือ AI สำหรับการวิเคราะห์ข้อมูลสินค้า ความเห็นลูกค้า และระบบตอบคำถาม (RAG Chat) เพื่อสนับสนุนงานการตลาดและการขายของแบรนด์ KAGE
+This project was developed for the course 204203 COMPUTER SCIENCE TECHNOLOGY
 
-- วิเคราะห์รีวิวลูกค้า (CSV) เพื่อหาประเด็น จุดแข็ง/จุดอ่อนของสินค้า
-- แสดงข้อมูลสินค้า/คำถามที่พบบ่อย จากไฟล์ JSON แยกตามสินค้า
-- ระบบ RAG (Retrieval-Augmented Generation) สำหรับตอบคำถามเกี่ยวกับสินค้า พร้อมอ้างอิงแหล่งที่มา
-- UI บน Streamlit ใช้งานง่าย และมีหน้าแยกตามผลิตภัณฑ์
+## Table Of Contents
+- [Installation and Setup](#installation-and-setup)
+- [How to run](#how-to-run)
+- [Features](#features)
+- [Project Structure](#project-structure)
+- [Data & Schemas](#data--schemas)
+- [RAG Components](#rag-components)
+- [Contributors](#contributors)
 
-## โครงสร้างโปรเจกต์
-```
-  assets/                     # รูปภาพที่ใช้ในหน้า UI
-  chroma_db/                  # ฐานข้อมูลเวกเตอร์ Chroma (ถ้ามีการสร้างไว้แล้ว)
-  data/                       # ข้อมูลสินค้า/FAQ/Complaint ในรูปแบบ JSON
-  pages/                      # หน้าแอป Streamlit แยกตามสินค้า/ฟังก์ชัน
-  RAG/                        # โมดูลระบบ RAG (ingest / query / app)
-  reviews/                    # รีวิวลูกค้า (.csv)
-  schemas/                    # สคีมาข้อมูลสำหรับ validate
-  Home.py                     # หน้าแรกของ Streamlit App หลัก
-  config.py                   # การตั้งค่าโมเดลผ่าน .env
-  requirements.txt            # รายการไลบรารีที่ใช้
-  README.md                   # เอกสารโครงการ (ไฟล์นี้)
-```
+## Installation and Setup
+It is recommended to use Python 3.10+ and create a virtual environment before installing the dependencies.
 
-## การติดตั้ง
-1) สร้างและเปิดใช้งาน virtual environment (แนะนำ Python 3.10+)
-```bash
+```sh
+# 1) Create and activate a virtual environment.
 python3 -m venv .venv
-source .venv/bin/activate
-```
+source .venv/bin/activate # On Windows: venv\Scripts\activate
 
-2) ติดตั้ง dependencies
-```bash
+# 2) Install the project dependencies
 pip install -r requirements.txt
 ```
 
-## การตั้งค่า Environment Variables (.env)
-สร้างไฟล์ `.env` ที่รากโปรเจกต์ และระบุค่าอย่างน้อยดังนี้
-```bash
-# เลือกโมเดลหลักของ LLM (ขึ้นกับผู้ให้บริการ)
-MODEL=gpt-4o-mini
+## How to run
+The app runs with Streamlit, and the starting page is Home.py.
 
-# โมเดลสร้างเวกเตอร์ฝังความหมาย (สำหรับ RAG)
-EMBED_MODEL=text-embedding-3-small
-
-# ถ้าใช้ OpenAI ให้ตั้งคีย์ต่อไปนี้
-OPENAI_API_KEY=your_openai_api_key
+```sh
+streamlit run Home.py
 ```
 
-## วิธีรันแอป
-```bash
-streamlit run HOME.py
+When successfully running, you can access other pages from the sidebar, such as product pages and the Business Analyze page.
+
+## Features
+- Chat/Completion: For asking and answering product-related questions (uses data in data/ and RAG)
+- Product Review Analysis: Analyze product reviews in reviews/ to summarize real user perspectives
+- Product Pages: Separate pages by category, e.g., Brush, Concealer, Cushion, Lip, Mascara
+- Business Analyze Page: View business insights
+- RAG Module (RAG/): For document ingestion and querying internal knowledge
+
+## Project Structure
+
+*Main files and folders to know*
+```
+/assets/                 # Images for the UI
+/data/                   # Product, FAQ, and complaint data in JSON files
+/pages/                  # Streamlit multi-page app
+/RAG/                    # RAG scripts: ingest, index, query, corpus
+/schemas/                # Data schemas for products and reviews (JSON & Python)
+Home.py                  # Streamlit home page
+config.py                # General project configuration
+requirements.txt         # List of dependencies
 ```
 
-แมพพอร์ตเริ่มต้นของ Streamlit คือ `8501` (หรือจะแจ้งในเทอร์มินัลหากชนพอร์ต)
+## Data & Schemas
+- Product/FAQ/Complaint data is stored in the data/ folder, separated by category and product ID, e.g., product_C001.json, faq_B001.json
+- Data structure is defined by schemas in schemas/, e.g., product_schema.json, review_schema.json
 
-## ขั้นตอนทำงานของ RAG
-1) เตรียมคอร์ปัสข้อมูลใน `RAG/corpus.jsonl` (หรือดึงจากไฟล์ใน `data/`)
-2) สร้างดัชนีเวกเตอร์ด้วยคำสั่ง ingest (ถ้ามีสคริปต์ `ingest.py`):
-```bash
+## RAG Components
+- RAG/ingest.py: For ingesting text from corpus.jsonl or other text files
+- RAG/index.py: For creating/updating the knowledge index
+-	RAG/query.py: For querying the knowledge base and generating answers (knowledge-based Q&A)
+
+Example usage of RAG (run as needed before launching the app):
+```sh
+# Ingest documents into the corpus
 python RAG/ingest.py
+
+# Create or update the knowledge index
+python RAG/index.py
+
+# (Optional) Test querying the knowledge base
+python RAG/query.py
 ```
-3) เริ่มใช้งานหน้าแชตใน `RAG/app.py` เพื่อถาม-ตอบ พร้อมแสดงแหล่งที่มา
 
-ไฟล์สำคัญในโมดูล RAG:
-- `RAG/ingest.py`: สร้างเวกเตอร์จากคอร์ปัสไปยัง Chroma/FAISS
-- `RAG/query.py`: ดึงข้อมูลที่เกี่ยวข้องและเรียก LLM เพื่อสังเคราะห์คำตอบ
-- `RAG/app.py`: UI Streamlit สำหรับสนทนา
+## Contributors
+* [Natthanicha Rodaree](https://github.com/Jellyfrist) 670510653 - Frontend and Backend
+* [Noorfadilah Prayunto](https://github.com/n00raw) 670510666 - Backend
+* [Wannee Thanomworrakul](https://github.com/cutecupca-ke) 670510679 - Backend
+* [Poramet Thammakrong](https://github.com/Poramet-tham) 670510716 - Frontend
 
-## แหล่งข้อมูล
-- `data/*.json`: ข้อมูลสินค้า, FAQ, ข้อร้องเรียน แยกตามรหัสสินค้า (B001, C001, C002, L001, M001)
-- `reviews/*.csv`: รีวิวลูกค้าตามสินค้า ใช้ประกอบการวิเคราะห์เชิงคุณภาพ
-- `schemas/*.py` และ `schemas/*.json`: สคีมาโครงสร้างข้อมูลผลิตภัณฑ์และรีวิว
-
-## การแก้ปัญหาเบื้องต้น
-- ImportError/ModuleNotFoundError: ตรวจสอบว่าได้ `pip install -r requirements.txt` ใน environment ที่เปิดใช้งานแล้ว
-- AssertionError จาก `config.py`: ตรวจสอบไฟล์ `.env` ว่ามี `MODEL` และ `EMBED_MODEL` ถูกต้อง
-- ข้อมูล/รีวิวไม่แสดง: ตรวจชื่อไฟล์ JSON/CSV ให้ตรง และโครงสร้างตาม `schemas/`
+## Slide Presentation
+- https://www.canva.com/design/DAG1d7W8Bbw/Uu4mZ3VKYfOVsS3FU2WxFg/edit?utm_content=DAG1d7W8Bbw&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton
