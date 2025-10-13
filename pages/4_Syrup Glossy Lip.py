@@ -1,7 +1,7 @@
 import streamlit as st
 from PIL import Image
 import os
-from dotenv import load_dotenv
+from dotenv import load_dotenv 𝗦𝘆𝗿𝘂𝗽 𝗚𝗹𝗼𝘀𝘀𝘆 𝗟𝗶𝗽
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.vectorstores import Chroma
 from langchain.chat_models import ChatOpenAI
