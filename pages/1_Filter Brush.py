@@ -70,7 +70,7 @@ st.markdown("""
 load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
-PERSIST_DIR = "chroma_db"
+PERSIST_DIR = "RAG/chroma_db"
 llm_ready = True
 db = None
 
