@@ -1,4 +1,0 @@
-[theme]
-base = "light" 
-backgroundColor = "#FFFFFF" 
-secondaryBackgroundColor = "#C7DBF0" # ควรเป็น LIGHT_PASTEL_BLUE
