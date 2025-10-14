@@ -95,7 +95,10 @@ if OPENAI_API_KEY:
 else:
     llm_ready = False
 
-prompt_template = """คุณคือเพศหญิง ที่เป็นผู้ช่วยตอบลูกค้าเกี่ยวกับสินค้า KAGE — ใช้เฉพาะข้อมูลต่อไปนี้เพื่อให้คำตอบ อย่าเดาหาข้อมูลที่ไม่มีในแหล่งข้อมูล หากข้อมูลไม่พอ ให้แจ้งว่าต้องการข้อมูลเพิ่มและนำทางลูกค้าอย่างสุภาพ
+prompt_template = """
+คุณคือเพศหญิง ที่เป็นผู้ช่วยตอบลูกค้าเกี่ยวกับสินค้า KAGE
+หน้าที่ของคุณคือ **ตอบคำถามโดยอ้างอิงจากข้อมูลในส่วน Context เท่านั้น** ห้ามใช้ความรู้ทั่วไปของคุณมาตอบ
+หากข้อมูลใน Context ไม่เพียงพอต่อการตอบคำถาม **อย่างครบถ้วน** ให้ตอบด้วยข้อความ: "ดิฉันต้องขออภัยค่ะ ข้อมูลในขณะนี้ยังไม่เพียงพอต่อการให้คำตอบที่ชัดเจน กรุณาระบุข้อมูลเพิ่มเติมให้ดิฉันด้วยนะคะ"
 
 Context:
 ----
@@ -105,10 +108,10 @@ Context:
 User: {question}
 
 Instructions:
-- ตอบสั้น 2–4 ย่อหน้า
-- ถ้าเป็นคำถามเกี่ยวกับปัญหา ให้เสนอแนวทางแก้ไขหรือขั้นตอนต่อไป
-- ถ้าเป็นคำถามทั่วไป เช่น สี ขนาด ราคา ให้ตอบข้อมูลเท่านั้น
+- ตอบสั้น 2–4 ย่อหน้า และใช้ภาษาที่เป็นมิตร
+- ห้ามระบุแหล่งข้อมูล (เช่น source: faq_B001.json) ในคำตอบสุดท้าย
 - ถ้าต้องการข้อมูลเพิ่ม ให้ถามคำถามเชิงเฉพาะ
+- ย้ำอีกครั้ง: หากข้อมูลไม่พอ **ต้อง** ตอบข้อความปฏิเสธที่กำหนดไว้ด้านบน
 """
 
 def build_prompt(retrieved_docs):
@@ -148,8 +151,14 @@ def answer_question(question, product_id=None, k=6):
         st.session_state.setdefault("_internal_errors", []).append(traceback.format_exc())
         return {"answer": "เกิดข้อผิดพลาดขณะค้นหาข้อมูลในฐานความรู้ กรุณาลองใหม่อีกครั้ง", "sources": []}
 
-    # สร้าง context (ถ้าไม่มีผลลัพธ์ ให้แจ้งว่าไม่พบ และยังส่ง empty context ให้ LLM)
-    context_text = build_prompt(retrieved_docs) if retrieved_docs else " (ไม่มีข้อมูลที่เกี่ยวข้องในฐานข้อมูลสำหรับสินค้านี้) "
+    if not retrieved_docs:
+        # หากไม่มีเอกสารที่เกี่ยวข้องเลย ให้ตอบปฏิเสธทันที ไม่ต้องเรียก LLM
+        return {
+            "answer": f"ดิฉันต้องขออภัยค่ะ ข้อมูลในขณะนี้ยังไม่เพียงพอต่อการให้คำตอบที่ชัดเจนเกี่ยวกับ '{question}' สำหรับสินค้า {FIXED_PRODUCT_NAME} ค่ะ", 
+            "sources": []
+        }
+
+    context_text = build_prompt(retrieved_docs)
 
     # ตรวจสอบคำถามว่าเป็นปัญหาหรือไม่ (ใช้เพื่อปรับ prompt ถ้าจำเป็น)
     problem_keywords = ["เสีย", "พัง", "แก้", "ไม่ติด", "ทำยังไง", "ล้างยังไง"]
@@ -162,7 +171,7 @@ def answer_question(question, product_id=None, k=6):
     try:
         prompt_obj = PromptTemplate(input_variables=["context", "question"], template=custom_prompt)
         prompt_text = prompt_obj.format(context=context_text, question=question)
-        answer = llm.predict(prompt_text)
+        answer = llm.invoke(prompt_text) 
     except Exception as e:
         st.session_state.setdefault("_internal_errors", []).append(traceback.format_exc())
         return {"answer": "เกิดข้อผิดพลาดขณะเรียกโมเดล LLM กรุณาตรวจสอบการตั้งค่า API หรือสภาวะแวดล้อม", "sources": []}
