@@ -2,7 +2,7 @@ import streamlit as st
 from PIL import Image
 import os
 from dotenv import load_dotenv
-
+# ใช้ import ตามที่คุณมี (ถ้าใช้แพ็กเกจอื่น ให้แก้ชื่อโมดูลให้ตรง)
 from langchain_openai import OpenAIEmbeddings 
 from langchain_community.vectorstores import Chroma
 from langchain_openai import ChatOpenAI
