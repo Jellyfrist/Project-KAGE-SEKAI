@@ -130,7 +130,7 @@ def build_prompt(retrieved_docs):
         context += f"[{idx}] ({source_file}) {page_content}\n"
     return context
 
-def answer_question(question, product_id=None, k=6):
+def answer_question(question, product_id=None, k=12):
     """
     ตอบคำถามเกี่ยวกับสินค้าหน้านี้ (FIXED_PRODUCT_ID)
     - product_id: ถ้ามี จะถูก override ให้เป็น FIXED_PRODUCT_ID (ตามโครงสร้างหน้าปัจจุบัน)
