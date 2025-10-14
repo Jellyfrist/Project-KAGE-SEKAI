@@ -75,6 +75,9 @@ python index.py
 python query.py
 ```
 
+## Deployment
+  - Link: https://project-kage-sekai.streamlit.app/
+
 ## Contributors
 * [Natthanicha Rodaree](https://github.com/Jellyfrist) 670510653 - Frontend and Backend
 * [Noorfadilah Prayunto](https://github.com/n00raw) 670510666 - Backend
