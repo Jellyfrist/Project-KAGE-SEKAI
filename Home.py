@@ -1,18 +1,16 @@
 import streamlit as st
 from PIL import Image
 import os
-# ลบ import: dotenv, langchain.embeddings, langchain.vectorstores, langchain.chat_models, langchain.prompts (เพราะไม่ใช้แล้ว)
 
-# --- 1. PAGE CONFIGURATION ---
+# 1. PAGE CONFIGURATION
 st.set_page_config(
     page_title="KAGE Intelligence Hub",
     layout="wide",
     initial_sidebar_state="expanded",
 )
 
-# --- 2. LOAD ASSETS & HEADER ---
+# 2. LOAD ASSETS & HEADER
 try:
-    # สมมติว่าไฟล์นี้มีอยู่จริง
     header_img = Image.open("assets/header_banner.png")
 except FileNotFoundError:
     header_img = None 
@@ -21,10 +19,9 @@ if header_img:
     st.image(header_img, use_container_width=True)
 st.markdown("<br>", unsafe_allow_html=True)
 
-# --- 3. TITLE & SUBHEADER ---
+# 3. TITLE & SUBHEADER
 st.title("ยินดีต้อนรับสู่ Project KAGE SEKAI: COLORFUL STAGE")
 
-# นี่คือส่วนข้อความที่ต้องการให้เปลี่ยนเป็น Kanit
 st.markdown("""
 แพลตฟอร์มรวมเครื่องมือ AI อัจฉริยะสำหรับ **วิเคราะห์ข้อมูลสินค้า** และ **สนับสนุนกลยุทธ์การขาย** ของแบรนด์ KAGE  
 
@@ -36,7 +33,7 @@ st.markdown("""
 กรุณาเลือกฟีเจอร์ที่ต้องการจากแถบด้านข้าง (Sidebar) เพื่อเริ่มใช้งาน
 """)
 
-# --- 4. CUSTOM CSS (FINAL FIX: เพิ่ม Specificity สำหรับ Markdown/List) ---
+# 4. CUSTOM CSS
 PASTEL_BLUE = "#AEC6CF" 
 ACCENT_BLUE = "#779ECB" 
 WHITE = "#FFFFFF" 
