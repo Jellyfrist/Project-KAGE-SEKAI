@@ -6,7 +6,8 @@ from dotenv import load_dotenv
 from langchain_openai import OpenAIEmbeddings 
 from langchain_community.vectorstores import Chroma
 from langchain_openai import ChatOpenAI
-from langchain.prompts import PromptTemplate
+# fix this from 'from langchain.prompts import PromptTemplate'
+from langchain_core.prompts import PromptTemplate
 from datetime import datetime  # <<< นำเข้า datetime
 import traceback
 
