@@ -1,8 +1,10 @@
 import os, glob, json, re
 from uuid import uuid4
 
-DATA_DIR = "data"  # โฟลเดอร์เก็บไฟล์ JSON
-CORPUS_FILE = "corpus.jsonl"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_DIR = os.path.join(BASE_DIR, "data")
+CORPUS_FILE = os.path.join(BASE_DIR, "corpus.jsonl")
+
 
 def clean_text(t):
     t = t.replace("\r\n", "\n")
