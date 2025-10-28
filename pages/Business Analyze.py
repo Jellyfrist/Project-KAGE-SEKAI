@@ -12,11 +12,10 @@ except ImportError as e:
     st.error("โปรดตรวจสอบว่าไฟล์ tc_complete.py, tc_analyze_review.py, และ tc_get_product_info.py อยู่ในตำแหน่งที่ถูกต้อง")
     st.stop()
 
-# --- [ส่วนการตั้งค่า] การโหลด Tool และ Executor ---
-# ใช้ @st.cache_resource เพื่อให้โหลดแค่ครั้งเดียว
+# --- Initialise tools and executor ---
 @st.cache_resource
 def load_executor():
-    """Loads and registers tools into the executor."""
+    """Load and register tools into the executor."""
     try:
         executor = ToolExecutor()
         review_tool_instance = ReviewTools()
@@ -28,10 +27,10 @@ def load_executor():
         print("✅ Tools have been successfully registered in Streamlit.")
         return executor
     except Exception as e:
-        st.error(f"การลงทะเบียน Tools ล้มเหลว: {e}")
+        st.error(f"Tool registration failed: {e}")
         return None
 
-# --- [ส่วนแสดงผลหลัก] การออกแบบ UI ---
+# --- Main UI section ---
 st.set_page_config(
     page_title="Business Insights Dashboard",
     page_icon="✨",
@@ -41,17 +40,17 @@ st.set_page_config(
 st.title("✨ KAGE Business Insights Dashboard")
 st.markdown("วิเคราะห์รีวิวลูกค้าและข้อมูลสินค้าอย่างชาญฉลาด เพื่อขับเคลื่อนกลยุทธ์ทางธุรกิจของคุณ")
 
-# โหลด Executor
+# Load executor
 executor = load_executor()
 
 if executor is None:
     st.warning("ไม่สามารถเริ่มต้นการทำงานของแอปพลิเคชันได้ เนื่องจาก Tool Executor ไม่พร้อมใช้งาน")
     st.stop()
 
-# --- สร้าง Tabs สำหรับแต่ละฟังก์ชัน ---
+# --- Tabs for each function ---
 tab1, tab2 = st.tabs(["📈 วิเคราะห์รีวิวสินค้า (Review Analysis)", "📦 ข้อมูลสินค้าเชิงกลยุทธ์ (Strategic Product Info)"])
 
-# --- Tab 1: Review Analysis ---
+# Tab 1: Review Analysis
 with tab1:
     st.header("วิเคราะห์รีวิวจากลูกค้า")
     st.markdown("อัปโหลดไฟล์ CSV หรือวางข้อความรีวิว เพื่อให้ LLM วิเคราะห์ sentiment, สรุปจุดแข็ง-จุดอ่อน, และให้คำแนะนำเชิงกลยุทธ์")
@@ -68,7 +67,7 @@ with tab1:
         options=product_options
     )
 
-    # --- ส่วนรับข้อมูลรีวิว ---
+    # --- Step 1: Input reviews ---
     st.subheader("ขั้นตอนที่ 1: เพิ่มข้อมูลรีวิว")
     input_method = st.radio("เลือกวิธีการนำเข้ารีวิว:", ("อัปโหลดไฟล์ CSV", "วางข้อความรีวิว"), horizontal=True)
     
@@ -83,7 +82,7 @@ with tab1:
         )
         if uploaded_file is not None:
             try:
-                # อ่านไฟล์และบันทึกชั่วคราวเพื่อให้ Tool ใช้งานได้
+                # Read and save the uploaded file for tool usage
                 df = pd.read_csv(uploaded_file)
                 if 'review' not in df.columns and '\ufeffreview' not in df.columns:
                     st.error("ไม่พบคอลัมน์ 'review' ในไฟล์ CSV ที่อัปโหลด")
@@ -96,23 +95,23 @@ with tab1:
             except Exception as e:
                 st.error(f"เกิดข้อผิดพลาดในการอ่านไฟล์: {e}")
 
-    else: # วางข้อความ
+    else:  # Paste text manually
         pasted_reviews = st.text_area(
             "วางข้อความรีวิว (แต่ละรีวิวให้ขึ้นบรรทัดใหม่)", 
             height=250,
             placeholder="เนื้อลิปดีมาก สีสวย ติดทน\nแพ็กเกจไม่ค่อยแข็งแรงเลย\nส่งของช้า แต่โดยรวมโอเค"
         )
         if pasted_reviews:
+            # Split pasted text by line
             review_texts = [line.strip() for line in pasted_reviews.split('\n') if line.strip()]
             st.info(f"รับข้อมูล {len(review_texts)} รีวิวเรียบร้อยแล้ว")
 
-
-    # --- ส่วนปุ่มวิเคราะห์ ---
+    # --- Step 2: Run analysis ---
     st.subheader("ขั้นตอนที่ 2: เริ่มการวิเคราะห์")
     analyze_button = st.button("🚀 เริ่มวิเคราะห์รีวิว!", type="primary", use_container_width=True)
 
     if analyze_button:
-        # กำหนด Prompt Engineering หลักก่อน
+        # Define main LLM prompt
         expert_prompt = """
         คุณคือ **นักวิเคราะห์เชิงกลยุทธ์ผลิตภัณฑ์ (Product Strategy Analyst)** ภารกิจของคุณคือการสรุปรีวิวลูกค้าจำนวนมากให้เป็น “รายงานวิเคราะห์เชิงธุรกิจฉบับเดียว”  
         ที่มีทั้งส่วนสรุปภาพรวมและข้อเสนอแนะเชิงกลยุทธ์  
@@ -144,16 +143,13 @@ with tab1:
         - ต้องตอบเป็นภาษาไทย 100%
         """
 
-        
-        # 1. กรณีอัปโหลดไฟล์
+        # Handle input type: uploaded CSV or pasted reviews
         if uploaded_file:
             user_message = f"""
             โปรดใช้ Tool 'analyze_review' เพื่อวิเคราะห์รีวิวสำหรับสินค้า '{product_name}' จากไฟล์ csv_path: '{temp_csv_path}'
 
             {expert_prompt}
             """
-        
-        # 2. กรณีวางข้อความ
         elif review_texts:
             reviews_str = "\\n".join(review_texts)
             user_message = f"""
@@ -164,12 +160,11 @@ with tab1:
         
             {expert_prompt}
             """
-        
         else:
             st.warning("กรุณาอัปโหลดไฟล์หรือวางข้อความรีวิวก่อนเริ่มการวิเคราะห์")
             st.stop()
 
-        # --- แสดงผลลัพธ์ ---
+        # --- Display analysis results ---
         st.markdown("---")
         st.subheader(f"✨ Executive Summary: วิเคราะห์รีวิวสินค้า {product_name}")
         st.info("💡 รายงานนี้ผ่านการสังเคราะห์จาก LLM โดยอ้างอิงข้อมูลรีวิวที่ป้อนเข้ามา")
@@ -178,14 +173,14 @@ with tab1:
             try:
                 result = executor.execute_with_tools(user_message)
         
-                # ดึงหัวข้อ 1 ถึงหัวข้อ 2
+                # Detect section headers in report
                 header_1 = "1. สรุปภาพรวมการวิเคราะห์ (Analysis Overview)"
                 header_2 = "2. ข้อเสนอแนะเชิงกลยุทธ์ (Strategic Recommendations)"
                     
                 start_1 = result.find(header_1)
                 start_2 = result.find(header_2)
 
-                # แสดงผล Markdown แบบครบทุกหัวข้อ
+                # Show Markdown report
                 with st.expander("📊 Analysis Overview", expanded=True):
                     if start_1 != -1 and start_2 != -1:
                         st.markdown(result[start_1:start_2], unsafe_allow_html=True)
@@ -212,7 +207,7 @@ with tab2:
     selected_id = st.selectbox("เลือก Product ID:", options=available_ids)
 
     if st.button("🔍 สร้างรายงานเชิงกลยุทธ์", key="tab2_generate_report", type="primary", use_container_width=True):
-        # ใช้ instance เดียวกับ executor
+        # Use same executor instance
         product_tool_instance = ProductTools()
         product_info = product_tool_instance.get_product_info(selected_id)
 
@@ -226,7 +221,7 @@ with tab2:
             total_shades = product_info["total_number_of_shades"]
             personal_color = product_info["personal_color_coverage"]
 
-            # Executive Summary Markdown
+            # Build Executive Summary markdown
             exec_summary_md = f"""
             - **💎 Core Value Proposition:** {core_value}
             - **💰 Pricing Flexibility:** {price_flex}
@@ -235,7 +230,7 @@ with tab2:
             with st.expander("📊 Executive Summary", expanded=True):
                 st.markdown(exec_summary_md)
 
-            # Personal Color Table
+            # Build Personal Color table
             pc_rows = []
             for pc_group, shades_list in personal_color.items():
                 for shade in shades_list:
@@ -252,7 +247,7 @@ with tab2:
             with st.expander("🎨 Personal Color Coverage", expanded=True):
                 st.dataframe(df_pc.style.set_properties(**{'text-align': 'left'}), use_container_width=True)
 
-            # 90-Day Action Plan
+            # --- Generate 90-Day Action Plan ---
             prompt_90day = f"""
             คุณคือ **นักวางแผนกลยุทธ์การตลาดและผลิตภัณฑ์** ใช้ข้อมูลเชิงกลยุทธ์สินค้า ID {selected_id} เพื่อสร้าง **90-Day Action Plan** Markdown ตาราง 3 คอลัมน์:
             1. กิจกรรมหลัก  
@@ -276,7 +271,7 @@ with tab2:
                 except Exception as e:
                     st.error(f"เกิดข้อผิดพลาดขณะสร้าง 90-Day Action Plan: {e}")
 
-# --- CSS STYLING (The final, most specific font fix) ---
+# --- CSS Styling ---
 PASTEL_BLUE = "#AEC6CF" 
 ACCENT_BLUE = "#779ECB" 
 WHITE = "#FFFFFF" 
@@ -288,8 +283,7 @@ st.markdown(
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap');
         
-        /* 1. GLOBAL: Apply Kanit font to ALL elements */
-        /* Targets EVERYTHING inside the app for maximum coverage */
+        /* Global font override */
         body, #root, .stApp, .main, 
         [data-testid="stAppViewContainer"], 
         .main * {{
@@ -297,58 +291,38 @@ st.markdown(
             color: {BLACK} !important; 
         }}
 
-        /* 2. ULTIMATE PARAGRAPH & MARKDOWN FIX 💥 */
-        /* Targets all <p> tags, especially those containing st.markdown text */
+        /* Paragraphs and markdown text */
         p,
-        div[data-testid="stVerticalBlock"] p, /* Markdown text inside main blocks */
-        .st-emotion-cache-1j0z8p1 p, /* Common paragraph wrapper */
-        .st-emotion-cache-1kyxreq p, /* Main content block wrapper */
-        .st-emotion-cache-12m2f5k p, /* Other common paragraph wrapper */
-        .st-emotion-cache-1629p8f p, /* Another common Streamlit paragraph wrapper */
-        
-        /* FIX: st.metric values, st.info/st.warning/st.error text */
+        div[data-testid="stVerticalBlock"] p,
         [data-testid="stMetricValue"], 
-        [data-testid="stMetricValue"] p,
-        [data-testid="stAlert"] p 
-        {{
+        [data-testid="stAlert"] p {{
             font-family: 'Kanit', sans-serif !important;
-            font-weight: 400 !important; /* Normal weight for body text */
+            font-weight: 400 !important;
         }}
 
-        /* 3. HEADING FIXES (The main fix for large text) */
-        h1, h2, h3, h4, h5, h6, 
-        [data-testid="stHeader"] h1, 
-        [data-testid="stHeader"] h2
-        {{
+        /* Headings */
+        h1, h2, h3, h4, h5, h6 {{
             font-family: 'Kanit', sans-serif !important;
             font-weight: 700 !important; 
         }}
-        
-        /* 4. LABELS & METRICS FIXES */
-        
-        /* st.selectbox/st.text_area/st.file_uploader LABEL text (Inside the form wrapper) */
-        label p, /* Generic label P tag */
+
+        /* Labels & metrics */
+        label p,
         [data-testid*="stForm"] label p,
-        [data-testid*="stFileUploader"] label p,
         [data-testid*="stSelectbox"] label p,
-        [data-testid*="stRadio"] label p,
-        [data-testid*="stTextArea"] label p,
-        [data-testid="stMetricLabel"] p /* Metric label (title) */
-        {{
+        [data-testid="stMetricLabel"] p {{
             font-family: 'Kanit', sans-serif !important;
             font-weight: 500 !important; 
         }}
         
-        /* 5. CORE COMPONENT FIXES */
-        
-        /* Streamlit Dataframe (st.dataframe) - Crucial Fix */
+        /* Dataframe font fix */
         .stDataFrame table, 
         .stDataFrame table th, 
         .stDataFrame table td {{
             font-family: 'Kanit', sans-serif !important;
         }}
         
-        /* Input/Selectbox/Radio/Button Text (Including options and current selection) */
+        /* Inputs, selectbox, radio, buttons */
         div[data-baseweb="select"] *,
         div[data-baseweb="input"] *,
         div[data-baseweb="textarea"] *,
@@ -357,26 +331,24 @@ st.markdown(
             font-family: 'Kanit', sans-serif !important;
         }}
         
-        /* Tab component font (ensure tabs use Kanit too) */
+        /* Tabs */
         button[data-baseweb="tab"] * {{
             font-family: 'Kanit', sans-serif !important;
         }}
         
-        /* EXPANDER/COLLAPSIBLE components Header */
+        /* Expanders */
         [data-testid="stExpander"] div[role="button"] p {{
             font-family: 'Kanit', sans-serif !important;
             font-weight: 600 !important; 
         }}
 
-        /* 6. THEME & BACKGROUND */
-        
-        /* Sidebar Styling */
+        /* Sidebar */
         section[data-testid="stSidebar"] {{
             background-color: {LIGHT_PASTEL_BLUE} !important; 
             border-right: 1px solid #CCCCCC;
         }}
         
-        /* Global Background Color */
+        /* Global background */
         body, #root, .stApp, .main, 
         [data-testid="stAppViewContainer"], 
         [data-testid="stSpinner"] > div {{
