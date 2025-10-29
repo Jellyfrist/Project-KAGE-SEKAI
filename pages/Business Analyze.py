@@ -12,7 +12,6 @@ except ImportError as e:
     st.error("โปรดตรวจสอบว่าไฟล์ tc_complete.py, tc_analyze_review.py, และ tc_get_product_info.py อยู่ในตำแหน่งที่ถูกต้อง")
     st.stop()
 
-# --- Initialise tools and executor ---
 @st.cache_resource
 def load_executor():
     """Load and register tools into the executor."""
@@ -30,7 +29,6 @@ def load_executor():
         st.error(f"Tool registration failed: {e}")
         return None
 
-# --- Main UI section ---
 st.set_page_config(
     page_title="Business Insights Dashboard",
     page_icon="✨",
@@ -40,17 +38,14 @@ st.set_page_config(
 st.title("✨ KAGE Business Insights Dashboard")
 st.markdown("วิเคราะห์รีวิวลูกค้าและข้อมูลสินค้าอย่างชาญฉลาด เพื่อขับเคลื่อนกลยุทธ์ทางธุรกิจของคุณ")
 
-# Load executor
 executor = load_executor()
 
 if executor is None:
     st.warning("ไม่สามารถเริ่มต้นการทำงานของแอปพลิเคชันได้ เนื่องจาก Tool Executor ไม่พร้อมใช้งาน")
     st.stop()
 
-# --- Tabs for each function ---
 tab1, tab2 = st.tabs(["📈 วิเคราะห์รีวิวสินค้า (Review Analysis)", "📦 ข้อมูลสินค้าเชิงกลยุทธ์ (Strategic Product Info)"])
 
-# Tab 1: Review Analysis
 with tab1:
     st.header("วิเคราะห์รีวิวจากลูกค้า")
     st.markdown("อัปโหลดไฟล์ CSV หรือวางข้อความรีวิว เพื่อให้ LLM วิเคราะห์ sentiment, สรุปจุดแข็ง-จุดอ่อน, และให้คำแนะนำเชิงกลยุทธ์")
@@ -67,7 +62,6 @@ with tab1:
         options=product_options
     )
 
-    # --- Step 1: Input reviews ---
     st.subheader("ขั้นตอนที่ 1: เพิ่มข้อมูลรีวิว")
     input_method = st.radio("เลือกวิธีการนำเข้ารีวิว:", ("อัปโหลดไฟล์ CSV", "วางข้อความรีวิว"), horizontal=True)
     
@@ -82,7 +76,6 @@ with tab1:
         )
         if uploaded_file is not None:
             try:
-                # Read and save the uploaded file for tool usage
                 df = pd.read_csv(uploaded_file)
                 if 'review' not in df.columns and '\ufeffreview' not in df.columns:
                     st.error("ไม่พบคอลัมน์ 'review' ในไฟล์ CSV ที่อัปโหลด")
@@ -91,27 +84,24 @@ with tab1:
                     review_count = len(df)
                     st.success(f"อัปโหลดไฟล์สำเร็จ! พบ {review_count} รีวิว")
                     st.dataframe(df.head(), use_container_width=True)
-
             except Exception as e:
                 st.error(f"เกิดข้อผิดพลาดในการอ่านไฟล์: {e}")
 
-    else:  # Paste text manually
+    else:  
         pasted_reviews = st.text_area(
             "วางข้อความรีวิว (แต่ละรีวิวให้ขึ้นบรรทัดใหม่)", 
             height=250,
             placeholder="เนื้อลิปดีมาก สีสวย ติดทน\nแพ็กเกจไม่ค่อยแข็งแรงเลย\nส่งของช้า แต่โดยรวมโอเค"
         )
         if pasted_reviews:
-            # Split pasted text by line
             review_texts = [line.strip() for line in pasted_reviews.split('\n') if line.strip()]
             st.info(f"รับข้อมูล {len(review_texts)} รีวิวเรียบร้อยแล้ว")
 
-    # --- Step 2: Run analysis ---
     st.subheader("ขั้นตอนที่ 2: เริ่มการวิเคราะห์")
     analyze_button = st.button("🚀 เริ่มวิเคราะห์รีวิว!", type="primary", use_container_width=True)
 
     if analyze_button:
-        # Define main LLM prompt
+
         expert_prompt = """
         คุณคือ **นักวิเคราะห์เชิงกลยุทธ์ผลิตภัณฑ์ (Product Strategy Analyst)** ภารกิจของคุณคือการสรุปรีวิวลูกค้าจำนวนมากให้เป็น “รายงานวิเคราะห์เชิงธุรกิจฉบับเดียว”  
         ที่มีทั้งส่วนสรุปภาพรวมและข้อเสนอแนะเชิงกลยุทธ์  
@@ -143,7 +133,7 @@ with tab1:
         - ต้องตอบเป็นภาษาไทย 100%
         """
 
-        # Handle input type: uploaded CSV or pasted reviews
+
         if uploaded_file:
             user_message = f"""
             โปรดใช้ Tool 'analyze_review' เพื่อวิเคราะห์รีวิวสำหรับสินค้า '{product_name}' จากไฟล์ csv_path: '{temp_csv_path}'
@@ -164,7 +154,6 @@ with tab1:
             st.warning("กรุณาอัปโหลดไฟล์หรือวางข้อความรีวิวก่อนเริ่มการวิเคราะห์")
             st.stop()
 
-        # --- Display analysis results ---
         st.markdown("---")
         st.subheader(f"✨ Executive Summary: วิเคราะห์รีวิวสินค้า {product_name}")
         st.info("💡 รายงานนี้ผ่านการสังเคราะห์จาก LLM โดยอ้างอิงข้อมูลรีวิวที่ป้อนเข้ามา")
@@ -172,15 +161,12 @@ with tab1:
         with st.spinner("🧠 AI กำลังวิเคราะห์รีวิว... อาจใช้เวลาสักครู่"):
             try:
                 result = executor.execute_with_tools(user_message)
-        
-                # Detect section headers in report
                 header_1 = "1. สรุปภาพรวมการวิเคราะห์ (Analysis Overview)"
                 header_2 = "2. ข้อเสนอแนะเชิงกลยุทธ์ (Strategic Recommendations)"
                     
                 start_1 = result.find(header_1)
                 start_2 = result.find(header_2)
 
-                # Show Markdown report
                 with st.expander("📊 Analysis Overview", expanded=True):
                     if start_1 != -1 and start_2 != -1:
                         st.markdown(result[start_1:start_2], unsafe_allow_html=True)
@@ -196,7 +182,6 @@ with tab1:
             except Exception as e:
                 st.error(f"เกิดข้อผิดพลาดระหว่างการวิเคราะห์: {e}")
 
-# --- Tab 2: Strategic Product Info ---
 with tab2:
     st.header("📦 ข้อมูลสินค้าเชิงกลยุทธ์")
     st.markdown(
@@ -207,7 +192,6 @@ with tab2:
     selected_id = st.selectbox("เลือก Product ID:", options=available_ids)
 
     if st.button("🔍 สร้างรายงานเชิงกลยุทธ์", key="tab2_generate_report", type="primary", use_container_width=True):
-        # Use same executor instance
         product_tool_instance = ProductTools()
         product_info = product_tool_instance.get_product_info(selected_id)
 
@@ -221,7 +205,6 @@ with tab2:
             total_shades = product_info["total_number_of_shades"]
             personal_color = product_info["personal_color_coverage"]
 
-            # Build Executive Summary markdown
             exec_summary_md = f"""
             - **💎 Core Value Proposition:** {core_value}
             - **💰 Pricing Flexibility:** {price_flex}
@@ -230,7 +213,6 @@ with tab2:
             with st.expander("📊 Executive Summary", expanded=True):
                 st.markdown(exec_summary_md)
 
-            # Build Personal Color table
             pc_rows = []
             for pc_group, shades_list in personal_color.items():
                 for shade in shades_list:
@@ -247,7 +229,6 @@ with tab2:
             with st.expander("🎨 Personal Color Coverage", expanded=True):
                 st.dataframe(df_pc.style.set_properties(**{'text-align': 'left'}), use_container_width=True)
 
-            # --- Generate 90-Day Action Plan ---
             prompt_90day = f"""
             คุณคือ **นักวางแผนกลยุทธ์การตลาดและผลิตภัณฑ์** ใช้ข้อมูลเชิงกลยุทธ์สินค้า ID {selected_id} เพื่อสร้าง **90-Day Action Plan** Markdown ตาราง 3 คอลัมน์:
             1. กิจกรรมหลัก  
@@ -271,7 +252,6 @@ with tab2:
                 except Exception as e:
                     st.error(f"เกิดข้อผิดพลาดขณะสร้าง 90-Day Action Plan: {e}")
 
-# --- CSS Styling ---
 PASTEL_BLUE = "#AEC6CF" 
 ACCENT_BLUE = "#779ECB" 
 WHITE = "#FFFFFF" 

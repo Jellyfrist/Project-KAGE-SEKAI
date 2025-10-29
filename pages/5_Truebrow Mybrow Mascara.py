@@ -2,60 +2,43 @@ import streamlit as st
 from PIL import Image
 import os
 from dotenv import load_dotenv
-# ใช้ import ตามที่คุณมี (ถ้าใช้แพ็กเกจอื่น ให้แก้ชื่อโมดูลให้ตรง)
 from langchain_openai import OpenAIEmbeddings 
 from langchain_community.vectorstores import Chroma
 from langchain_openai import ChatOpenAI
-# fix this from 'from langchain.prompts import PromptTemplate'
 from langchain_core.prompts import PromptTemplate
-from datetime import datetime  # <<< นำเข้า datetime
+from datetime import datetime  
 import traceback
-
-# --- CONFIGURATION & PAGE SETUP ---
 
 st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded",
 )
 
-# --- CONSTANTS ---
 FIXED_PRODUCT_ID = "M001"
 FIXED_PRODUCT_NAME = "มาสคาร่าคิ้ว (M001)" 
-
-# **การแก้ไขหลัก: ใช้ Key เพื่อแยกการเปลี่ยนหน้ากับการ Rerun**
 CURRENT_PAGE_KEY = f"chat_messages_{FIXED_PRODUCT_ID}"
 
-# --- SESSION STATE INITIALIZATION AND CLEAR FUNCTION ---
-
-# 1. กำหนดค่าเริ่มต้นของ Session State
 if CURRENT_PAGE_KEY not in st.session_state:
-    st.session_state[CURRENT_PAGE_KEY] = []  # เก็บ messages ไว้ใน key เฉพาะของหน้านี้
+    st.session_state[CURRENT_PAGE_KEY] = []  
 if "current_page_load_key" not in st.session_state:
     st.session_state["current_page_load_key"] = None 
 if "product_context" not in st.session_state:
     st.session_state["product_context"] = None
 
-# 2. ฟังก์ชันเคลียร์แชท เมื่อมีการ "เปลี่ยนหน้า"
 def clear_chat_on_page_change():
     """
     Clears the chat history only if the app detects a navigation event (page change).
     It compares the CURRENT_PAGE_KEY with the last loaded key in session state.
     """
-    # ถ้า Key ของหน้านี้ไม่ตรงกับ Key ล่าสุดที่ถูกบันทึกไว้ใน Session State 
     if st.session_state["current_page_load_key"] != CURRENT_PAGE_KEY:
         st.session_state[CURRENT_PAGE_KEY] = []
-        # อัปเดต Key ล่าสุดให้เป็น Key ของหน้านี้
         st.session_state["current_page_load_key"] = CURRENT_PAGE_KEY
 
-# เรียกใช้ฟังก์ชันนี้ก่อนที่จะแสดงผลส่วนอื่น ๆ ทั้งหมด
 clear_chat_on_page_change()
 
-
-# --- HEADER & PRODUCT INFO ---
 try:
     header_img = Image.open("assets/Macara.png")
 except FileNotFoundError:
-    # หากไม่มีรูปภาพ ให้แสดงข้อความแทน (กรณีทดสอบที่ไม่มีไฟล์)
     header_img = None
 
 if header_img:
@@ -70,20 +53,15 @@ st.markdown("""
 มีมาด้วยกันถึง 6 เฉดสีที่คัดมาแล้วว่าเนียนธรรมชาติ ซอฟต์แบบไม่โป๊ะ คอมพลีทลุคแล้วปังที่สุด
 """, unsafe_allow_html=True)
 
-
-# --- AI SETUP (ปรับปรุงการจัดการ API Key) ---
 load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-
 PERSIST_DIR = "chroma_db"
 llm_ready = True
 db = None
 
-# พยายามโหลด embeddings / chroma / llm แต่จับ exception ให้เป็นมิตรกับผู้ใช้
 if OPENAI_API_KEY:
     try:
         emb = OpenAIEmbeddings(model="text-embedding-3-small", openai_api_key=OPENAI_API_KEY)
-        # ถ้า Chroma ยังไม่มีไฟล์ DB จะเกิด error ที่นี่ — เราจับไว้แล้วแจ้งผู้ใช้
         db = Chroma(
             persist_directory=PERSIST_DIR,
             embedding_function=emb,
@@ -92,7 +70,6 @@ if OPENAI_API_KEY:
         llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0.1, openai_api_key=OPENAI_API_KEY)
     except Exception as e:
         llm_ready = False
-        # บันทึก traceback เพื่อ debug (แต่ไม่แสดงเต็มๆ ให้ผู้ใช้)
         st.session_state.setdefault("_internal_errors", []).append(traceback.format_exc())
 else:
     llm_ready = False
@@ -128,39 +105,27 @@ def answer_question(question, product_id=None, k=6):
     - product_id: ถ้ามี จะถูก override ให้เป็น FIXED_PRODUCT_ID (ตามโครงสร้างหน้าปัจจุบัน)
     - k: จำนวน chunk ที่จะดึง
     """
-    # บังคับใช้ product ของหน้านี้ (เพราะแต่ละไฟล์เป็นหน้าสินค้าเดียว)
     product_id = FIXED_PRODUCT_ID 
     filter = {"product_id": product_id}
 
-    # ตรวจสอบความพร้อมก่อนเริ่มทำงาน
     if not llm_ready or db is None:
         return {"answer": "เนื่องจาก API Key หรือฐานข้อมูลไม่พร้อมใช้งาน ระบบจึงไม่สามารถดึงข้อมูลจาก LLM ได้ กรุณาตรวจสอบการตั้งค่า OPENAI_API_KEY หรือไฟล์ DB.", "sources": []}
 
-    # ทำ similarity search อย่างระมัดระวัง (จับ exception)
     try:
-        # สำหรับ Chroma: similarity_search(query, k, filter) หรือ ความแตกต่างแล้วแต่เวอร์ชัน
-        # เราจะลองทั้งสองแบบเพื่อให้เข้ากันกับหลายเวอร์ชัน
         try:
             retrieved_docs = db.similarity_search(question, k=k, filter=filter)
         except TypeError:
-            # บางเวอร์ชันใช้ arguments ชื่อ 'query'
             retrieved_docs = db.similarity_search(query=question, k=k, filter=filter)
     except Exception as e:
-        # ถ้าการค้นหาเกิดปัญหา ให้คืนข้อความที่เป็นมิตร
         st.session_state.setdefault("_internal_errors", []).append(traceback.format_exc())
         return {"answer": "เกิดข้อผิดพลาดขณะค้นหาข้อมูลในฐานความรู้ กรุณาลองใหม่อีกครั้ง", "sources": []}
 
-    # สร้าง context (ถ้าไม่มีผลลัพธ์ ให้แจ้งว่าไม่พบ และยังส่ง empty context ให้ LLM)
     context_text = build_prompt(retrieved_docs) if retrieved_docs else " (ไม่มีข้อมูลที่เกี่ยวข้องในฐานข้อมูลสำหรับสินค้านี้) "
-
-    # ตรวจสอบคำถามว่าเป็นปัญหาหรือไม่ (ใช้เพื่อปรับ prompt ถ้าจำเป็น)
     problem_keywords = ["เสีย", "พัง", "แก้", "ไม่ติด", "ทำยังไง", "ล้างยังไง"]
     is_problem = any(word in question.lower() for word in problem_keywords)
 
-    # ถ้าต้องการ ปรับ prompt (ที่นี่ใช้ prompt_template เดียวกัน แต่สามารถปรับเพิ่มเติมได้)
     custom_prompt = prompt_template
 
-    # สร้าง prompt และเรียก LLM
     try:
         prompt_obj = PromptTemplate(input_variables=["context", "question"], template=custom_prompt)
         prompt_text = prompt_obj.format(context=context_text, question=question)
@@ -169,7 +134,6 @@ def answer_question(question, product_id=None, k=6):
         st.session_state.setdefault("_internal_errors", []).append(traceback.format_exc())
         return {"answer": "เกิดข้อผิดพลาดขณะเรียกโมเดล LLM กรุณาตรวจสอบการตั้งค่า API หรือสภาวะแวดล้อม", "sources": []}
 
-    # เก็บแหล่งที่มา (ถ้ามี)
     sources = []
     for doc in retrieved_docs:
         meta = getattr(doc, "metadata", {}) or {}
@@ -177,76 +141,55 @@ def answer_question(question, product_id=None, k=6):
 
     return {"answer": answer, "sources": sources}
 
-# --- CHAT DISPLAY FUNCTION (เพิ่มการแสดงเวลา, ลบ Sources) ---
 def display_chat_message_content(message):
     content = message["content"]
-    timestamp = message.get("time", "") # ดึงเวลาที่บันทึกไว้
+    timestamp = message.get("time", "") 
 
-    # รูปแบบการแสดงผล: (เวลา) ข้อความ
-    # ใช้ span ห่อเวลาเพื่อให้สามารถปรับแต่งด้วย CSS ได้ (ถ้าจำเป็น) และแยกออกจากเนื้อหาหลัก
     full_content = f"<span style='font-size: 0.8em; color: gray;'>({timestamp})</span> {content}"
     
     st.markdown(full_content, unsafe_allow_html=True) 
     
-    # <<< ลบส่วนการแสดง sources/context ออกไปแล้ว >>>
-
-# --- DISPLAY OLD MESSAGES ---
-
-# ใช้ st.container ห่อข้อความแชทเพื่อจัดการพื้นที่
 chat_container = st.container()
 
 with chat_container:
-    # **ใช้ CURRENT_PAGE_KEY ในการดึง messages**
     for msg in st.session_state[CURRENT_PAGE_KEY]:
         avatar = "💖" if msg["role"] == "assistant" else "🙋‍♀️" 
         with st.chat_message(msg["role"], avatar=avatar):
             display_chat_message_content(msg)
 
-
-# --- CHAT INPUT & PROCESSING (เพิ่มการบันทึกเวลา, ลบ Sources) ---
 prompt = st.chat_input("พิมพ์คำถามของลูกค้า...")
 
 if prompt:
-    current_time = datetime.now().strftime("%H:%M") # <<< ดึงเวลาปัจจุบัน
-
-    # 1. User message
+    current_time = datetime.now().strftime("%H:%M") 
     st.session_state[CURRENT_PAGE_KEY].append({
         "role": "user", 
         "content": prompt, 
         "sources": [], 
-        "time": current_time # <<< บันทึกเวลา
+        "time": current_time 
     })
     
-    # 2. Display user message
     with st.chat_message("user", avatar="🙋‍♀️"): 
-        # แสดงผลพร้อมเวลา
-        st.markdown(f"<span style='font-size: 0.8em; color: gray;'>({current_time})</span> {prompt}", unsafe_allow_html=True) # ปรับให้แสดงเวลาตรงนี้ด้วย
+        st.markdown(f"<span style='font-size: 0.8em; color: gray;'>({current_time})</span> {prompt}", unsafe_allow_html=True) 
 
     product_id = FIXED_PRODUCT_ID
     st.session_state["product_context"] = product_id
     
-    # 3. Get and display assistant response
     with st.chat_message("assistant", avatar="💖"): 
         with st.spinner("กำลังดึงข้อมูลและตอบคำถาม..."):
             resp = answer_question(question=prompt, product_id=product_id)
 
-        assistant_time = datetime.now().strftime("%H:%M") # <<< ดึงเวลาผู้ช่วยตอบ
+        assistant_time = datetime.now().strftime("%H:%M") 
 
-        # แสดงผลพร้อมเวลา
-        st.markdown(f"<span style='font-size: 0.8em; color: gray;'>({assistant_time})</span> {resp['answer']}", unsafe_allow_html=True) # ปรับให้แสดงเวลาตรงนี้ด้วย
+        st.markdown(f"<span style='font-size: 0.8em; color: gray;'>({assistant_time})</span> {resp['answer']}", unsafe_allow_html=True) 
         
-        # <<< ลบส่วนการแสดง sources/context ในตอนที่ผู้ช่วยตอบออกไปแล้ว >>>
-
-        # 4. Save assistant response
-        st.session_state[CURRENT_PAGE_KEY].append({ # **ใช้ CURRENT_PAGE_KEY ในการบันทึก**
+        st.session_state[CURRENT_PAGE_KEY].append({ 
             "role":"assistant",
             "content": resp["answer"],
             "context_used": True,
-            "sources": resp.get("sources", []), # ยังบันทึก sources ไว้ใน session state เผื่อต้องการใช้ภายหลัง
-            "time": assistant_time # <<< บันทึกเวลา
+            "sources": resp.get("sources", []), 
+            "time": assistant_time 
         })
 
-# --- CUSTOM CSS: FONT KANIT & UI STYLING (FINAL FIX) ---
 PASTEL_BLUE = "#AEC6CF" 
 ACCENT_BLUE = "#779ECB" 
 WHITE = "#FFFFFF" 

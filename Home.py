@@ -2,14 +2,12 @@ import streamlit as st
 from PIL import Image
 import os
 
-# 1. PAGE CONFIGURATION
 st.set_page_config(
     page_title="KAGE Intelligence Hub",
     layout="wide",
     initial_sidebar_state="expanded",
 )
 
-# 2. LOAD ASSETS & HEADER
 try:
     header_img = Image.open("assets/header_banner.png")
 except FileNotFoundError:
@@ -19,7 +17,6 @@ if header_img:
     st.image(header_img, use_container_width=True)
 st.markdown("<br>", unsafe_allow_html=True)
 
-# 3. TITLE & SUBHEADER
 st.title("ยินดีต้อนรับสู่ Project KAGE SEKAI: COLORFUL STAGE")
 
 st.markdown("""
@@ -33,7 +30,6 @@ st.markdown("""
 กรุณาเลือกฟีเจอร์ที่ต้องการจากแถบด้านข้าง (Sidebar) เพื่อเริ่มใช้งาน
 """)
 
-# 4. CUSTOM CSS
 PASTEL_BLUE = "#AEC6CF" 
 ACCENT_BLUE = "#779ECB" 
 WHITE = "#FFFFFF" 
